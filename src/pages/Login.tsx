@@ -97,7 +97,7 @@ export default function Login() {
             </div>
             <h3 className="text-xl font-bold text-white">
               {role === 'student' && 'Candidate/Student'}
-              {role === 'teacher' && 'Campus/Faculty'}
+              {role === 'teacher' && 'Teacher'}
               {role === 'hod' && 'HOD'}
               {role === 'principal' && 'Principal'}
             </h3>

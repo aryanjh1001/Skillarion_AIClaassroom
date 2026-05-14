@@ -89,6 +89,7 @@ export default function TeacherDashboard() {
   const [leaves, setLeaves] = useState<LeaveRequest[]>([]);
   const [examCreationMode, setExamCreationMode] = useState<"manual" | "ai">("manual");
   const [examType, setExamType] = useState("same");
+  const [generatedExamCode, setGeneratedExamCode] = useState<string | null>(null);
 
   const day = getCurrentDayStatus();
   const [selectedDay, setSelectedDay] = useState(day.dayName);
@@ -125,6 +126,12 @@ export default function TeacherDashboard() {
   const update = (id: string, status: "Approved" | "Rejected") =>
     updateLeaveStatus(id, status);
 
+  const handleCreateExam = () => {
+    // Generate a random 6-character alphanumeric code
+    const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+    setGeneratedExamCode(code);
+  };
+
   if (!data) {
     return (
       <MainLayout>
@@ -133,16 +140,17 @@ export default function TeacherDashboard() {
     );
   }
 
+  const displayName = data.name.toLowerCase().includes("dashboard") ? "Sarah Smith" : data.name;
+
   return (
     <MainLayout>
-      {/* Welcome Banner */}
-      <div className="mb-8 border-b border-white/10 pb-6">
+      <div className="mb-8">
         <h1 className="text-4xl font-black text-slate-900 dark:text-white">
           Teacher Dashboard
         </h1>
  
         <p className="mt-2 text-lg text-slate-600 dark:text-slate-400">
-          Welcome back, {data.name} 👋
+          Welcome Teacher {displayName} 👋
         </p>
       </div>
 
@@ -278,6 +286,9 @@ export default function TeacherDashboard() {
                     >
                       Reject
                     </button>
+                    <button className="rounded-xl bg-indigo-500/10 px-4 py-2 font-semibold text-indigo-600 shadow-sm transition hover:bg-indigo-500/20 dark:text-indigo-400">
+                      Download Outpass
+                    </button>
                   </div>
                 </div>
               ))
@@ -309,10 +320,18 @@ export default function TeacherDashboard() {
             <div className="mb-4 grid gap-4 md:grid-cols-3">
               <select className="rounded-xl border border-slate-300 bg-white p-3 text-slate-900 outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30 dark:border-blue-500/15 dark:bg-[#111B44] dark:text-white">
                 <option>Select Class</option>
-                <option>Class 10-A</option>
-                <option>Class 10-B</option>
-                <option>Class 9-B</option>
-                <option>Class 8-A</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+              </select>
+
+              <select className="rounded-xl border border-slate-300 bg-white p-3 text-slate-900 outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30 dark:border-blue-500/15 dark:bg-[#111B44] dark:text-white">
+                <option>Select Section</option>
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
               </select>
 
               <select className="rounded-xl border border-slate-300 bg-white p-3 text-slate-900 outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30 dark:border-blue-500/15 dark:bg-[#111B44] dark:text-white">
@@ -374,10 +393,18 @@ export default function TeacherDashboard() {
 
               <select className="rounded-xl border border-slate-300 bg-white p-3 text-slate-900 outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30 dark:border-blue-500/15 dark:bg-[#111B44] dark:text-white">
                 <option>Select Class</option>
-                <option>Class 10-A</option>
-                <option>Class 10-B</option>
-                <option>Class 9-B</option>
-                <option>Class 8-A</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+              </select>
+
+              <select className="rounded-xl border border-slate-300 bg-white p-3 text-slate-900 outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30 dark:border-blue-500/15 dark:bg-[#111B44] dark:text-white">
+                <option>Select Section</option>
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
               </select>
 
               <select className="rounded-xl border border-slate-300 bg-white p-3 text-slate-900 outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30 dark:border-blue-500/15 dark:bg-[#111B44] dark:text-white">
@@ -390,18 +417,6 @@ export default function TeacherDashboard() {
               <input
                 type="date"
                 className="rounded-xl border border-slate-300 bg-white p-3 text-slate-900 outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30 dark:border-blue-500/15 dark:bg-[#111B44] dark:text-white"
-              />
-
-              <input
-                type="time"
-                placeholder="Select Time"
-                className="rounded-xl border border-slate-300 bg-white p-3 text-slate-900 [color-scheme:dark] outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30 dark:border-blue-500/15 dark:bg-[#111B44] dark:text-white"
-              />
-
-              <input
-                type="number"
-                placeholder="Duration in minutes"
-                className="rounded-xl border border-slate-300 bg-white p-3 text-slate-900 outline-none appearance-auto focus:border-gold-500 focus:ring-2 focus:ring-gold-500/30 dark:border-blue-500/15 dark:bg-[#111B44] dark:text-white"
               />
 
               <select 
@@ -439,10 +454,23 @@ export default function TeacherDashboard() {
             </div>
 
             <div className="mt-6 flex justify-end">
-              <button className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-3 font-bold text-white shadow-lg shadow-indigo-500/25 transition-all hover:scale-105 hover:shadow-indigo-500/40">
+              <button 
+                onClick={handleCreateExam}
+                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-3 font-bold text-white shadow-lg shadow-indigo-500/25 transition-all hover:scale-105 hover:shadow-indigo-500/40"
+              >
                 Create Assessment
               </button>
             </div>
+
+            {generatedExamCode && (
+              <div className="mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-50/50 p-6 text-center dark:border-emerald-500/20 dark:bg-emerald-900/20 animate-fade-in">
+                <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">Assessment Created Successfully!</p>
+                <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">Share this unique code with your students to grant them access:</p>
+                <div className="mt-4 inline-block rounded-xl bg-white px-8 py-3 shadow-inner dark:bg-[#0C1330]">
+                  <p className="text-3xl font-black tracking-widest text-slate-900 dark:text-white">{generatedExamCode}</p>
+                </div>
+              </div>
+            )}
           </div>
         </>
       )}

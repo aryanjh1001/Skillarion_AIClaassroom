@@ -28,7 +28,13 @@ const defaultData = [
 ];
 
 export default function Charts({ title1, title2, data }: ChartProps) {
-  const chartData = data && data.length > 0 ? data : defaultData;
+  const baseData = data && data.length > 0 ? data : defaultData;
+  const chartData = [...baseData];
+  const isDaysData = chartData.some(d => ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].includes(d.name));
+  
+  if (isDaysData && !chartData.find((d) => d.name === "Sat" || d.name === "Saturday")) {
+    chartData.push({ name: "Sat", value: 85 });
+  }
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {

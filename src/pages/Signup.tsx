@@ -14,7 +14,7 @@ const roles = [
   },
   {
     key: "teacher" as SignupRole,
-    title: "Campus/Faculty",
+    title: "Teacher",
     desc: "Organise classes, manage assessments and track student progress.",
     icon: "👨‍🏫",
   },

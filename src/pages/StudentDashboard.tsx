@@ -39,30 +39,30 @@ type TabType =
   | "performance"
   | "notifications";
 
-const timetable: Record<string, { subject: string; code: string; teacher: string; room: string; time: string; type: string; groups: string }[]> = {
+const timetable: Record<string, { subject: string; teacher: string; room: string; time: string; type: string }[]> = {
   Monday: [
-    { time: "10:00 AM", subject: "Computer Organization and Architecture", teacher: "John Doe", code: "ECE2002 - TH", room: "229", type: "TH", groups: "B1+TB1+TBB1" },
-    { time: "11:00 AM", subject: "Database Management Systems", teacher: "Sarah Smith", code: "CSE2007 - ETH", room: "506", type: "ETH", groups: "C1+TC1" },
-    { time: "12:00 PM", subject: "Applied Statistics", teacher: "Michael Johnson", code: "MAT1011 - ETH", room: "116", type: "ETH", groups: "D1+TD1" },
-    { time: "2:00 PM", subject: "Arithmetic Problem Solving Skills", teacher: "Emily Brown", code: "STS2009 - TH", room: "213", type: "TH", groups: "A1" }
+    { time: "10:00 AM", subject: "Computer Organization and Architecture", teacher: "John Doe", room: "229", type: "TH" },
+    { time: "11:00 AM", subject: "Database Management Systems", teacher: "Sarah Smith", room: "506", type: "ETH" },
+    { time: "12:00 PM", subject: "Applied Statistics", teacher: "Michael Johnson", room: "116", type: "ETH" },
+    { time: "2:00 PM", subject: "Arithmetic Problem Solving Skills", teacher: "Emily Brown", room: "213", type: "TH" }
   ],
   Tuesday: [
-    { time: "9:00 AM", subject: "Web Technologies", teacher: "David Lee", code: "CSE3001 - TH", room: "305", type: "TH", groups: "A2" },
-    { time: "11:00 AM", subject: "Operating Systems", teacher: "Laura White", code: "CSE3003 - ETH", room: "402", type: "ETH", groups: "B2" }
+    { time: "9:00 AM", subject: "Web Technologies", teacher: "David Lee", room: "305", type: "TH" },
+    { time: "11:00 AM", subject: "Operating Systems", teacher: "Laura White", room: "402", type: "ETH" }
   ],
   Wednesday: [
-    { time: "10:00 AM", subject: "Software Engineering", teacher: "Chris Green", code: "CSE1005 - TH", room: "120", type: "TH", groups: "C2" },
-    { time: "2:00 PM", subject: "Database Management Systems", teacher: "Sarah Smith", code: "CSE2007 - ETH", room: "506", type: "ETH", groups: "C1+TC1" }
+    { time: "10:00 AM", subject: "Software Engineering", teacher: "Chris Green", room: "120", type: "TH" },
+    { time: "2:00 PM", subject: "Database Management Systems", teacher: "Sarah Smith", room: "506", type: "ETH" }
   ],
   Thursday: [
-    { time: "9:00 AM", subject: "Applied Statistics", teacher: "Michael Johnson", code: "MAT1011 - ETH", room: "116", type: "ETH", groups: "D1+TD1" },
-    { time: "11:00 AM", subject: "Computer Organization and Architecture", teacher: "John Doe", code: "ECE2002 - TH", room: "229", type: "TH", groups: "B1+TB1+TBB1" }
+    { time: "9:00 AM", subject: "Applied Statistics", teacher: "Michael Johnson", room: "116", type: "ETH" },
+    { time: "11:00 AM", subject: "Computer Organization and Architecture", teacher: "John Doe", room: "229", type: "TH" }
   ],
   Friday: [
-    { time: "10:00 AM", subject: "Arithmetic Problem Solving Skills", teacher: "Emily Brown", code: "STS2009 - TH", room: "213", type: "TH", groups: "A1" }
+    { time: "10:00 AM", subject: "Arithmetic Problem Solving Skills", teacher: "Emily Brown", room: "213", type: "TH" }
   ],
   Saturday: [
-    { time: "9:00 AM", subject: "Project Review", teacher: "Review Panel A", code: "PRJ4001", room: "310", type: "LAB", groups: "All" }
+    { time: "9:00 AM", subject: "Project Review", teacher: "Review Panel A", room: "310", type: "LAB" }
   ],
 };
 
@@ -113,6 +113,9 @@ export default function StudentDashboard() {
 
   const [selectedDay, setSelectedDay] = useState(dayStatus.dayName);
   const [attendanceTab, setAttendanceTab] = useState<"theory" | "lab">("theory");
+
+  const [enteredExamCode, setEnteredExamCode] = useState("");
+  const [examJoinMessage, setExamJoinMessage] = useState<{type: 'success'|'error', text: string} | null>(null);
 
   const todaySchedule = dayStatus.isWorkingDay
     ? timetable[dayStatus.dayName] || []
@@ -201,6 +204,22 @@ export default function StudentDashboard() {
     }
   };
 
+  const handleJoinExam = () => {
+    if (!enteredExamCode.trim()) {
+      setExamJoinMessage({ type: 'error', text: 'Please enter a valid exam code.' });
+      return;
+    }
+    
+    // Simulate verifying code
+    setExamJoinMessage({ type: 'success', text: `Successfully joined exam: ${enteredExamCode.toUpperCase()}. Loading assessment...` });
+    
+    // Clear message after 3 seconds
+    setTimeout(() => {
+      setExamJoinMessage(null);
+      setEnteredExamCode("");
+    }, 3000);
+  };
+
   if (error) {
     return (
       <MainLayout>
@@ -217,16 +236,17 @@ export default function StudentDashboard() {
     );
   }
 
+  const displayName = data.name.toLowerCase().includes("dashboard") ? "Aarav Sharma" : data.name;
+
   return (
     <MainLayout>
-      {/* Welcome Banner */}
       <div className="mb-8">
         <h1 className="text-4xl font-black text-slate-900 dark:text-white">
           Student Dashboard
         </h1>
 
         <p className="mt-2 text-lg text-slate-600 dark:text-slate-400">
-          Welcome back, {data.name} 👋
+          Welcome Student {displayName} 👋 | Class 10-A
         </p>
       </div>
 
@@ -319,9 +339,8 @@ export default function StudentDashboard() {
                     <div className={innerCardClass}>
                       <h3 className="text-lg font-bold text-slate-900 dark:text-white">{item.subject}</h3>
                       <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{item.teacher}</p>
-                      <p className="text-sm font-semibold text-blue-500 mt-2">{item.code}</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">{item.room}</p>
-                      <p className="text-xs font-bold text-slate-400 mt-1">{item.groups}</p>
+                      <p className="text-sm font-semibold text-blue-500 mt-2">{item.type}</p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400">Room No. {item.room}</p>
                     </div>
                   </div>
                 ))}
@@ -480,6 +499,11 @@ export default function StudentDashboard() {
                           {leave.status}
                         </span>
                       </p>
+                      {leave.status === "Approved" && (
+                        <button className="mt-3 rounded-xl bg-indigo-500/10 px-4 py-2 font-semibold text-indigo-600 shadow-sm transition hover:bg-indigo-500/20 dark:text-indigo-400">
+                          Download Leavepass
+                        </button>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -501,8 +525,40 @@ export default function StudentDashboard() {
           />
 
           <div className={cardClass}>
+            <div className="mb-8 rounded-2xl border border-indigo-500/20 bg-indigo-50/50 p-6 dark:bg-indigo-950/20">
+              <h2 className="mb-2 text-xl font-black text-indigo-600 dark:text-indigo-400">
+                Join Exam via Code
+              </h2>
+              <p className="mb-4 text-sm text-slate-600 dark:text-slate-300">
+                Enter the unique code provided by your teacher to access the assessment.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-3">
+                <input 
+                  type="text" 
+                  placeholder="e.g. A9B2C3" 
+                  value={enteredExamCode}
+                  onChange={(e) => setEnteredExamCode(e.target.value.toUpperCase())}
+                  maxLength={6}
+                  className={`${inputClass} sm:max-w-xs font-bold tracking-widest uppercase`}
+                />
+                <button 
+                  onClick={handleJoinExam}
+                  className="rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-3 font-bold text-white shadow-md shadow-indigo-500/25 transition hover:scale-105 hover:shadow-indigo-500/40"
+                >
+                  Access Exam
+                </button>
+              </div>
+
+              {examJoinMessage && (
+                <p className={`mt-4 text-sm font-bold ${examJoinMessage.type === 'success' ? 'text-emerald-500' : 'text-rose-500'}`}>
+                  {examJoinMessage.type === 'success' ? '✅ ' : '❌ '}{examJoinMessage.text}
+                </p>
+              )}
+            </div>
+
             <h2 className="mb-4 text-xl font-black text-accent-blue">
-              Exam Attempts
+              Scheduled Attempts
             </h2>
 
             {dayStatus.isWorkingDay ? (
