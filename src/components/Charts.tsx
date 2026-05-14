@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
+  Cell,
   LineChart,
   Line,
   XAxis,
@@ -23,6 +24,7 @@ const defaultData = [
   { name: "Wed", value: 70 },
   { name: "Thu", value: 88 },
   { name: "Fri", value: 92 },
+  { name: "Sat", value: 85 },
 ];
 
 export default function Charts({ title1, title2, data }: ChartProps) {
@@ -49,6 +51,18 @@ export default function Charts({ title1, title2, data }: ChartProps) {
   const gridColor = isDark ? "#94A3B8" : "#64748B";
   const tooltipBg = isDark ? "#0D1526" : "#FFFFFF";
   const tooltipText = isDark ? "#FFFFFF" : "#0F172A";
+
+  const barColors = isDark 
+    ? ["#60A5FA", "#34D399", "#A78BFA", "#FBBF24", "#F472B6"] 
+    : ["#C8952E", "#3B82F6", "#10B981", "#8B5CF6", "#EF4444"];
+
+  const getBarColor = (index: number) => {
+    if (chartData.length === 1) {
+      // "last graph in hod give it some other colour you like will be the best in dark mode let it be yellow in light mode."
+      return isDark ? "#A78BFA" : "#D97706"; // Purple in dark, dark-yellow/gold in light
+    }
+    return barColors[index % barColors.length];
+  };
 
   return (
     <div className="text-slate-900 dark:text-white">
@@ -85,7 +99,11 @@ export default function Charts({ title1, title2, data }: ChartProps) {
                 labelStyle={{ color: tooltipText }}
               />
 
-              <Bar dataKey="value" fill="#C8952E" radius={[8, 8, 0, 0]} />
+              <Bar dataKey="value" radius={[8, 8, 0, 0]}>
+                {chartData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={getBarColor(index)} />
+                ))}
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>

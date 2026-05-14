@@ -27,21 +27,21 @@ export default function DayStatusCard() {
 
   return (
     <div className="card-hover rounded-3xl border border-slate-200/60 bg-white/90 p-6 text-slate-900 shadow-card backdrop-blur-xl dark:border-blue-500/10 dark:bg-[#0C1330] dark:text-white">
-      <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">
+      <p className="text-base font-semibold text-slate-500 dark:text-slate-400">
         Today
       </p>
 
-      <h2 className="mt-2 font-display text-2xl font-black text-slate-900 dark:text-white">
+      <h2 className="mt-2 font-display text-3xl font-black text-slate-900 dark:text-white">
         {dayStatus.dayName}
       </h2>
 
-      <p className="mt-2 text-sm font-medium text-slate-500 dark:text-slate-400">
+      <p className="mt-2 text-base font-medium text-slate-500 dark:text-slate-400">
         📅 {dayStatus.fullDate}
       </p>
 
       <div className="mt-4 rounded-2xl bg-gold-50 dark:bg-blue-900/20 px-4 py-3 text-gold-700 dark:text-blue-300 dark:bg-blue-500/10 dark:text-blue-300">
-        <p className="font-black">{dayStatus.status}</p>
-        <p className="text-sm">{dayStatus.message}</p>
+        <p className="font-black text-lg">{dayStatus.status}</p>
+        <p className="text-base">{dayStatus.message}</p>
       </div>
     </div>
   );

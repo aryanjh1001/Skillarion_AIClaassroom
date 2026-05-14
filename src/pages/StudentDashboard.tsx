@@ -36,15 +36,34 @@ type TabType =
   | "attendance"
   | "leave"
   | "exams"
-  | "performance";
+  | "performance"
+  | "notifications";
 
-const timetable: Record<string, string[]> = {
-  Monday: ["Maths - 9:00 AM", "Physics - 10:30 AM", "AI Lab - 1:00 PM"],
-  Tuesday: ["English - 9:00 AM", "Chemistry - 11:00 AM", "Coding - 2:00 PM"],
-  Wednesday: ["Maths - 9:30 AM", "Biology - 11:00 AM", "Aptitude - 3:00 PM"],
-  Thursday: ["Physics Lab - 10:00 AM", "Computer Science - 12:00 PM"],
-  Friday: ["Chemistry - 9:00 AM", "Project Session - 1:30 PM"],
-  Saturday: ["Weekly Test - 10:00 AM", "Doubt Session - 12:00 PM"],
+const timetable: Record<string, { subject: string; code: string; teacher: string; room: string; time: string; type: string; groups: string }[]> = {
+  Monday: [
+    { time: "10:00 AM", subject: "Computer Organization and Architecture", teacher: "John Doe", code: "ECE2002 - TH", room: "229", type: "TH", groups: "B1+TB1+TBB1" },
+    { time: "11:00 AM", subject: "Database Management Systems", teacher: "Sarah Smith", code: "CSE2007 - ETH", room: "506", type: "ETH", groups: "C1+TC1" },
+    { time: "12:00 PM", subject: "Applied Statistics", teacher: "Michael Johnson", code: "MAT1011 - ETH", room: "116", type: "ETH", groups: "D1+TD1" },
+    { time: "2:00 PM", subject: "Arithmetic Problem Solving Skills", teacher: "Emily Brown", code: "STS2009 - TH", room: "213", type: "TH", groups: "A1" }
+  ],
+  Tuesday: [
+    { time: "9:00 AM", subject: "Web Technologies", teacher: "David Lee", code: "CSE3001 - TH", room: "305", type: "TH", groups: "A2" },
+    { time: "11:00 AM", subject: "Operating Systems", teacher: "Laura White", code: "CSE3003 - ETH", room: "402", type: "ETH", groups: "B2" }
+  ],
+  Wednesday: [
+    { time: "10:00 AM", subject: "Software Engineering", teacher: "Chris Green", code: "CSE1005 - TH", room: "120", type: "TH", groups: "C2" },
+    { time: "2:00 PM", subject: "Database Management Systems", teacher: "Sarah Smith", code: "CSE2007 - ETH", room: "506", type: "ETH", groups: "C1+TC1" }
+  ],
+  Thursday: [
+    { time: "9:00 AM", subject: "Applied Statistics", teacher: "Michael Johnson", code: "MAT1011 - ETH", room: "116", type: "ETH", groups: "D1+TD1" },
+    { time: "11:00 AM", subject: "Computer Organization and Architecture", teacher: "John Doe", code: "ECE2002 - TH", room: "229", type: "TH", groups: "B1+TB1+TBB1" }
+  ],
+  Friday: [
+    { time: "10:00 AM", subject: "Arithmetic Problem Solving Skills", teacher: "Emily Brown", code: "STS2009 - TH", room: "213", type: "TH", groups: "A1" }
+  ],
+  Saturday: [
+    { time: "9:00 AM", subject: "Project Review", teacher: "Review Panel A", code: "PRJ4001", room: "310", type: "LAB", groups: "All" }
+  ],
 };
 
 const examsToday = [
@@ -92,9 +111,27 @@ export default function StudentDashboard() {
 
   const dayStatus = getCurrentDayStatus();
 
+  const [selectedDay, setSelectedDay] = useState(dayStatus.dayName);
+  const [attendanceTab, setAttendanceTab] = useState<"theory" | "lab">("theory");
+
   const todaySchedule = dayStatus.isWorkingDay
     ? timetable[dayStatus.dayName] || []
     : [];
+    
+  const theoryAttendance = [
+    { name: "Software Engineering", code: "CSE1005", percent: 79 },
+    { name: "Database Management Systems", code: "CSE2007", percent: 82 },
+    { name: "Introduction to Machine Learning", code: "CSE3008", percent: 87 },
+    { name: "Computer Organization and Architecture", code: "ECE2002", percent: 83 },
+    { name: "Applied Statistics", code: "MAT1011", percent: 91 },
+    { name: "Arithmetic Problem Solving Skills", code: "STS2009", percent: 95 }
+  ];
+
+  const labAttendance = [
+    { name: "Database Management Systems Lab", code: "CSE2007", percent: 100 },
+    { name: "Introduction to Machine Learning Lab", code: "CSE3008", percent: 88 },
+    { name: "Computer Organization and Architecture Lab", code: "ECE2002", percent: 100 }
+  ];
 
   useEffect(() => {
     const load = async () => {
@@ -204,37 +241,37 @@ export default function StudentDashboard() {
             <DayStatusCard />
 
             <div className={cardClass}>
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                Attendance
+              <p className="text-base font-semibold text-slate-500 dark:text-slate-400">
+                Attendance 📈
               </p>
-              <h2 className="mt-2 text-3xl font-black text-gold-600 dark:text-blue-400">
+              <h2 className="mt-2 text-4xl font-black text-gold-600 dark:text-blue-400">
                 {data.attendance}%
               </h2>
             </div>
 
             <div className={cardClass}>
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                Today Classes
+              <p className="text-base font-semibold text-slate-500 dark:text-slate-400">
+                Today Classes 📚
               </p>
-              <h2 className="mt-2 text-3xl font-black text-slate-900 dark:text-white">
+              <h2 className="mt-2 text-4xl font-black text-slate-900 dark:text-white">
                 {todaySchedule.length}
               </h2>
             </div>
 
             <div className={cardClass}>
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                Exams Today
+              <p className="text-base font-semibold text-slate-500 dark:text-slate-400">
+                Exams Today 📝
               </p>
-              <h2 className="mt-2 text-3xl font-black text-slate-900 dark:text-white">
+              <h2 className="mt-2 text-4xl font-black text-slate-900 dark:text-white">
                 {dayStatus.isWorkingDay ? examsToday.length : 0}
               </h2>
             </div>
 
             <div className={cardClass}>
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                Leave Requests
+              <p className="text-base font-semibold text-slate-500 dark:text-slate-400">
+                Leave Requests ✈️
               </p>
-              <h2 className="mt-2 text-3xl font-black text-slate-900 dark:text-white">
+              <h2 className="mt-2 text-4xl font-black text-slate-900 dark:text-white">
                 {myLeaves.length}
               </h2>
             </div>
@@ -257,21 +294,41 @@ export default function StudentDashboard() {
           />
 
           <div className={cardClass}>
-            <h2 className="mb-4 text-xl font-black text-gold-600 dark:text-blue-400">
-              Today's Timetable
-            </h2>
+            <div className="mb-6 flex gap-2 overflow-x-auto pb-2">
+              {["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((day) => (
+                <button
+                  key={day}
+                  onClick={() => setSelectedDay(day)}
+                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl font-bold transition-all ${
+                    selectedDay === day
+                      ? "bg-blue-500 text-white shadow-md shadow-blue-500/25"
+                      : "bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-[#111B44] dark:text-slate-400 dark:hover:bg-blue-500/10"
+                  }`}
+                >
+                  {day.charAt(0)}
+                </button>
+              ))}
+            </div>
 
-            {todaySchedule.length > 0 ? (
-              <div className="space-y-3">
-                {todaySchedule.map((item, index) => (
-                  <div key={index} className={innerCardClass}>
-                    {item}
+            {(timetable[selectedDay] || []).length > 0 ? (
+              <div className="relative border-l-2 border-blue-500/30 pl-6 space-y-8 ml-3">
+                {(timetable[selectedDay] || []).map((item, index) => (
+                  <div key={index} className="relative">
+                    <div className="absolute -left-[35px] top-1 h-4 w-4 rounded-full border-4 border-white bg-blue-500 dark:border-[#0C1330]"></div>
+                    <div className="text-sm font-bold text-blue-500 dark:text-blue-400 mb-2">{item.time}</div>
+                    <div className={innerCardClass}>
+                      <h3 className="text-lg font-bold text-slate-900 dark:text-white">{item.subject}</h3>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{item.teacher}</p>
+                      <p className="text-sm font-semibold text-blue-500 mt-2">{item.code}</p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400">{item.room}</p>
+                      <p className="text-xs font-bold text-slate-400 mt-1">{item.groups}</p>
+                    </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-slate-500 dark:text-slate-400">
-                No classes scheduled today because it is a leave day.
+              <p className="text-slate-500 dark:text-slate-400 text-center py-10 font-medium">
+                No classes scheduled for {selectedDay}.
               </p>
             )}
           </div>
@@ -285,20 +342,27 @@ export default function StudentDashboard() {
             description="Monitor your attendance percentage and maintain the required academic attendance level."
           />
 
-          <div className="grid gap-6 lg:grid-cols-2">
-            <div className={cardClass}>
-              <h2 className="mb-3 text-xl font-black text-gold-600 dark:text-blue-400">
-                Current Attendance
-              </h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                Your current attendance percentage
-              </p>
-              <h3 className="mt-4 text-5xl font-black text-slate-900 dark:text-white">
-                {data.attendance}%
-              </h3>
+          <div className={cardClass}>
+            <div className="flex gap-4 mb-6">
+              <button 
+                onClick={() => setAttendanceTab("theory")}
+                className={`flex-1 py-3 rounded-2xl font-bold transition-all ${attendanceTab === "theory" ? "bg-slate-700 text-white shadow-md dark:bg-blue-500/20 dark:text-blue-400" : "bg-slate-100 text-slate-500 dark:bg-[#111B44] dark:text-slate-400"}`}
+              >Theory</button>
+              <button 
+                onClick={() => setAttendanceTab("lab")}
+                className={`flex-1 py-3 rounded-2xl font-bold transition-all ${attendanceTab === "lab" ? "bg-slate-700 text-white shadow-md dark:bg-blue-500/20 dark:text-blue-400" : "bg-slate-100 text-slate-500 dark:bg-[#111B44] dark:text-slate-400"}`}
+              >Lab</button>
             </div>
-
-            <ProgressCard label="Attendance Progress" value={data.attendance} />
+            
+            <div className="space-y-4">
+              {(attendanceTab === "theory" ? theoryAttendance : labAttendance).map((subj, idx) => (
+                <div key={idx} className={innerCardClass}>
+                  <h3 className="text-4xl font-black text-blue-500 dark:text-blue-400">{subj.percent}%</h3>
+                  <p className="mt-3 text-lg font-bold text-slate-800 dark:text-white">{subj.name}</p>
+                  <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">{subj.code}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </>
       )}
@@ -533,6 +597,43 @@ export default function StudentDashboard() {
             </p>
 
             <button className={`mt-4 ${buttonClass}`}>Start Practice</button>
+          </div>
+        </>
+      )}
+
+      {activeTab === "notifications" && (
+        <>
+          <SectionHeader
+            title="Notifications"
+            description="View your recent notices, announcements, and alerts."
+          />
+          <div className={cardClass}>
+            <h2 className="mb-4 text-xl font-black text-gold-600 dark:text-blue-400">
+              📢 Notice Board
+            </h2>
+            <div className="space-y-3">
+              <div className={innerCardClass}>
+                <div className="flex items-center justify-between">
+                  <p className="font-semibold">Mid-Semester Exam Timetable Released</p>
+                  <span className="text-xs text-slate-400">2 hours ago</span>
+                </div>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Check the exams tab for your subject-wise examination schedule. Prepare accordingly.</p>
+              </div>
+              <div className={innerCardClass}>
+                <div className="flex items-center justify-between">
+                  <p className="font-semibold">Annual Tech Fest Registration Open</p>
+                  <span className="text-xs text-slate-400">1 day ago</span>
+                </div>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Register for hackathons, coding competitions, and project exhibitions before May 18.</p>
+              </div>
+              <div className={innerCardClass}>
+                <div className="flex items-center justify-between">
+                  <p className="font-semibold">Sports Day — 1 June 2026</p>
+                  <span className="text-xs text-slate-400">3 days ago</span>
+                </div>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Annual inter-department sports event. Register with your class representative by May 25.</p>
+              </div>
+            </div>
           </div>
         </>
       )}

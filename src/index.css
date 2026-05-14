@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
 /* ================= BASE SETUP ================= */
 
 html,
@@ -16,10 +18,14 @@ html {
 }
 
 body {
-  font-family: "Inter", "Segoe UI", sans-serif;
+  font-family: "Times New Roman", Times, serif;
   background: #F8FAFC;
   color: #0f172a;
   overflow-x: hidden;
+}
+
+h1, h2, h3, .font-display {
+  font-style: italic;
 }
 
 .dark body {

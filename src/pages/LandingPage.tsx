@@ -36,19 +36,18 @@ export default function LandingPage() {
         if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, light ? p.r * 1.5 : p.r, 0, Math.PI * 2);
         ctx.fillStyle = light ? 'rgba(200,149,46,0.35)' : 'rgba(99,102,241,0.55)';
         ctx.fill();
         for (let j = i + 1; j < pts.length; j++) {
           const p2 = pts[j];
-          const d = Math.hypot(p.x - p2.x, p.y - p2.y);
-          if (d < 130) {
+          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+          if (dist < 130) {
             ctx.beginPath();
-            ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = light
-              ? `rgba(200,149,46,${0.07 * (1 - d / 130)})`
-              : `rgba(99,102,241,${0.13 * (1 - d / 130)})`;
-            ctx.lineWidth = 0.7;
+            ctx.strokeStyle = light ? `rgba(200,149,46,${0.15 - dist / 800})` : `rgba(99,102,241,${0.15 - dist / 800})`;
+            ctx.lineWidth = light ? 1.5 : 0.7;
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
             ctx.stroke();
           }
         }
@@ -127,12 +126,14 @@ export default function LandingPage() {
       {/* ── Nav ── */}
       <nav className={`${styles.nav} ${scrolled ? styles.navScrolled : ''}`}>
         <div className={styles.navLogo}>
-          <span className={styles.navLogoIcon}>🧠</span>
+          <img src="/logo.jpg" alt="Logo" className={styles.navLogoIcon} style={{ width: '32px', height: '32px', background: '#fff', borderRadius: '6px', padding: '2px', objectFit: 'contain' }} />
           <span className={styles.navLogoText}>AI Classroom</span>
         </div>
         <div className={styles.navLinks}>
           <a href="#features" className={styles.navLink}>Features</a>
           <a href="#how" className={styles.navLink}>How it works</a>
+          <a href="#insights" className={styles.navLink}>Insights</a>
+          <a href="#workflow" className={styles.navLink}>Workflow</a>
           <button id="theme-toggle" onClick={toggleTheme} className={styles.themeToggle} title="Toggle theme">
             {theme === 'dark' ? '☀️' : '🌙'}
           </button>
@@ -246,7 +247,6 @@ export default function LandingPage() {
                 <div className={styles.featureCardFront}>
                   <div className={styles.featureIconBg}>{f.icon}</div>
                   <h3 className={styles.featureTitle}>{f.title}</h3>
-                  <p className={styles.featureText}>{f.text}</p>
                   <span className={styles.featureTag}>{f.tag}</span>
                 </div>
                 <div className={styles.featureCardBack}>
@@ -278,6 +278,98 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── About / Why Choose Us ── */}
+      <section id="about" className={styles.aboutSection}>
+        <div className={styles.aboutContainer}>
+          <div className={`${styles.aboutContent} ${styles.reveal}`}>
+            <h2 className={styles.sectionTitle}>Built for <span className={styles.gradientText}>Educators</span></h2>
+            <p className={styles.aboutText}>
+              We believe that teachers should spend their time teaching, not grading or writing repetitive questions.
+              Our platform uses advanced AI models to generate customized learning paths, instant assessments, and
+              comprehensive performance analytics, enabling a truly personalized educational experience for every student.
+            </p>
+            <ul className={styles.aboutList}>
+              <li>✨ Save 15+ hours a week on grading and planning.</li>
+              <li>✨ Identify at-risk students instantly with predictive AI.</li>
+              <li>✨ Ensure secure, proctored examinations anywhere.</li>
+            </ul>
+          </div>
+          <div className={`${styles.aboutVisual} ${styles.reveal}`}>
+            <div className={styles.aboutImageGlow} />
+            <div className={styles.aboutImageMock}>
+              <div className={styles.mockHeader}>
+                 <span/><span/><span/>
+              </div>
+              <div className={styles.mockBody}>
+                 <h3>AI Analysis Complete</h3>
+                 <p>Student engagement is up by 24% this week.</p>
+                 <div className={styles.mockBar} style={{width:'80%'}}></div>
+                 <div className={styles.mockBar} style={{width:'60%'}}></div>
+                 <div className={styles.mockBar} style={{width:'90%'}}></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Insights & Analytics ── */}
+      <section id="insights" className={styles.insightsSection}>
+        <div className={`${styles.sectionHeader} ${styles.reveal}`}>
+          <h2 className={styles.sectionTitle}>Deep <span className={styles.gradientText}>Insights</span></h2>
+          <p className={styles.sectionSubtitle}>Turn data into actionable teaching strategies</p>
+        </div>
+        <div className={styles.insightsGrid}>
+          <div className={`${styles.insightCard} ${styles.reveal}`} style={{ transitionDelay: '0s' }}>
+            <div className={styles.insightIcon}>🎯</div>
+            <h3>Skill Tracking</h3>
+            <p>Monitor individual student mastery of specific topics and automatically suggest targeted revision materials.</p>
+          </div>
+          <div className={`${styles.insightCard} ${styles.reveal}`} style={{ transitionDelay: '0.1s' }}>
+            <div className={styles.insightIcon}>📈</div>
+            <h3>Class Trends</h3>
+            <p>Analyze overall class performance to identify common bottlenecks in your curriculum and adjust your pacing.</p>
+          </div>
+          <div className={`${styles.insightCard} ${styles.reveal}`} style={{ transitionDelay: '0.2s' }}>
+            <div className={styles.insightIcon}>🧠</div>
+            <h3>Predictive Analytics</h3>
+            <p>Our AI predicts final grades with 94% accuracy, allowing you to intervene before it's too late.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Workflow / Integrations ── */}
+      <section id="workflow" className={styles.workflowSection}>
+        <div className={styles.workflowContainer}>
+          <div className={`${styles.workflowVisual} ${styles.reveal}`}>
+            <div className={styles.orbitRing}>
+              <div className={styles.orbitIcon} style={{ '--i': 0 } as React.CSSProperties}>📊</div>
+              <div className={styles.orbitIcon} style={{ '--i': 1 } as React.CSSProperties}>🤖</div>
+              <div className={styles.orbitIcon} style={{ '--i': 2 } as React.CSSProperties}>📝</div>
+              <div className={styles.orbitIcon} style={{ '--i': 3 } as React.CSSProperties}>🎓</div>
+              <div className={styles.orbitIcon} style={{ '--i': 4 } as React.CSSProperties}>🔐</div>
+              <div className={styles.orbitIcon} style={{ '--i': 5 } as React.CSSProperties}>⏱️</div>
+            </div>
+            <div className={styles.orbitCenter}>
+              <img src="/logo.jpg" alt="Logo" style={{ width: '48px', height: '48px', borderRadius: '10px', objectFit: 'contain' }} />
+            </div>
+          </div>
+          <div className={`${styles.workflowContent} ${styles.reveal}`}>
+            <div className={styles.heroBadge}>⚡ Seamless Workflow</div>
+            <h2 className={styles.sectionTitle}>
+              <span className={styles.gradientText}>Integrate</span> with your<br/>Teaching Workflow
+            </h2>
+            <p className={styles.aboutText}>
+              Easily connect AI Classroom with your existing tools for a seamless experience.
+            </p>
+            <ul className={styles.aboutList}>
+              <li>✅ Works with Google Classroom &amp; LMS platforms</li>
+              <li>✅ Export results as PDF or CSV instantly</li>
+              <li>✅ Sync student data across all dashboards</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA ── */}
       <section className={styles.ctaSection}>
         <div className={`${styles.ctaCard} ${styles.reveal}`}>
@@ -293,14 +385,60 @@ export default function LandingPage() {
       </section>
 
       {/* ── Footer ── */}
-      <footer className={styles.footer}>
-        <span className={styles.footerLogo}>🧠 AI Classroom Intelligence System</span>
-        <div className={styles.footerLinks}>
-          <Link to="/login" className={styles.footerLink}>Sign In</Link>
-          <Link to="/signup" className={styles.footerLink}>Sign Up</Link>
-          <a href="#features" className={styles.footerLink}>Features</a>
+      <footer 
+        className={styles.footerWrap}
+        onMouseMove={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          e.currentTarget.style.setProperty('--x', `${x}px`);
+          e.currentTarget.style.setProperty('--y', `${y}px`);
+        }}
+      >
+        <div className={styles.footerTop}>
+          <div className={styles.footerBrand}>
+            <div className={styles.footerBrandLogo}>
+              <img src="/logo.jpg" alt="Logo" style={{ width: '36px', height: '36px', background: '#fff', borderRadius: '8px', padding: '2px', objectFit: 'contain' }} />
+              <span>AI Classroom</span>
+            </div>
+            <p className={styles.footerBrandText}>
+              Transform your classroom with AI-powered assessments, real-time analytics,
+              and personalized learning paths for every student.
+            </p>
+          </div>
+          <div className={styles.footerCol}>
+            <h4 className={styles.footerColTitle}>Product</h4>
+            <a href="#features" className={styles.footerGlowLink}>Features</a>
+            <a href="#how" className={styles.footerGlowLink}>How it Works</a>
+            <a href="#insights" className={styles.footerGlowLink}>Insights</a>
+            <a href="#about" className={styles.footerGlowLink}>About</a>
+          </div>
+          <div className={styles.footerCol}>
+            <h4 className={styles.footerColTitle}>Resources</h4>
+            <a href="#" className={styles.footerGlowLink}>Documentation</a>
+            <a href="#" className={styles.footerGlowLink}>API Reference</a>
+            <a href="#" className={styles.footerGlowLink}>Help Center</a>
+            <a href="#" className={styles.footerGlowLink}>Community</a>
+          </div>
+          <div className={styles.footerCol}>
+            <h4 className={styles.footerColTitle}>Company</h4>
+            <a href="#" className={styles.footerGlowLink}>Privacy Policy</a>
+            <a href="#" className={styles.footerGlowLink}>Terms of Service</a>
+            <a href="#" className={styles.footerGlowLink}>Contact Us</a>
+            <a href="#" className={styles.footerGlowLink}>Careers</a>
+          </div>
+          <div className={styles.footerCol}>
+            <h4 className={styles.footerColTitle}>Connect</h4>
+            <a href="#" className={styles.footerGlowLink}>LinkedIn</a>
+            <a href="#" className={styles.footerGlowLink}>Instagram</a>
+            <a href="#" className={styles.footerGlowLink}>Twitter / X</a>
+            <a href="#" className={styles.footerGlowLink}>GitHub</a>
+          </div>
         </div>
-        <span className={styles.footerText}>© 2024 All rights reserved.</span>
+        <div className={styles.footerBottom}>
+          <span className={styles.footerText}>© 2026 AI Classroom · All rights reserved.</span>
+          <span className={styles.footerText}>Terms &amp; Conditions</span>
+        </div>
       </footer>
     </main>
   );
