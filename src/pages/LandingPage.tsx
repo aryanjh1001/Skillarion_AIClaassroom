@@ -239,15 +239,23 @@ export default function LandingPage() {
           {features.map((f, i) => (
             <div
               key={i}
-              className={`${styles.featureCard} ${styles.reveal}`}
+              className={`${styles.featureCardWrap} ${styles.reveal}`}
               style={{ transitionDelay: `${i * 0.07}s` }}
-              onMouseMove={tilt}
-              onMouseLeave={resetTilt}
             >
-              <div className={styles.featureIconBg}>{f.icon}</div>
-              <h3 className={styles.featureTitle}>{f.title}</h3>
-              <p className={styles.featureText}>{f.text}</p>
-              <span className={styles.featureTag}>{f.tag}</span>
+              <div className={styles.featureCard}>
+                <div className={styles.featureCardFront}>
+                  <div className={styles.featureIconBg}>{f.icon}</div>
+                  <h3 className={styles.featureTitle}>{f.title}</h3>
+                  <p className={styles.featureText}>{f.text}</p>
+                  <span className={styles.featureTag}>{f.tag}</span>
+                </div>
+                <div className={styles.featureCardBack}>
+                  <div className={styles.featureIconBg}>{f.icon}</div>
+                  <h3 className={styles.featureTitle}>{f.title}</h3>
+                  <p className={styles.featureText}>{f.text}</p>
+                  <span className={styles.featureTag}>{f.tag}</span>
+                </div>
+              </div>
             </div>
           ))}
         </div>

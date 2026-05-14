@@ -126,13 +126,14 @@ body::before {
   inset: 0;
   z-index: 0;
   pointer-events: none;
+  /* Light mode dots: Dark yellow, 30% larger */
   background-image:
-    radial-gradient(circle, rgba(255, 255, 255, 0.6) 1px, transparent 1.5px),
-    radial-gradient(circle, rgba(37, 99, 235, 0.4) 1px, transparent 1.5px),
-    radial-gradient(circle, rgba(147, 51, 234, 0.35) 1px, transparent 1.5px);
+    radial-gradient(circle, rgba(218, 165, 32, 0.7) 1.5px, transparent 2.5px),
+    radial-gradient(circle, rgba(184, 134, 11, 0.6) 1.5px, transparent 2.5px),
+    radial-gradient(circle, rgba(200, 149, 46, 0.5) 1.5px, transparent 2.5px);
   background-size: 140px 140px, 200px 200px, 260px 260px;
   background-position: 0 0, 50px 70px, 90px 130px;
-  opacity: 0.25;
+  opacity: 0.55;
   animation: starsMove 40s linear infinite;
 }
 
