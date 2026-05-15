@@ -442,9 +442,16 @@ export default function TeacherDashboard() {
               <h3 className="mb-2 text-lg font-black text-indigo-600 dark:text-indigo-400">
                 AI Question Generator ✨
               </h3>
-              <p className="mb-4 text-sm text-slate-600 dark:text-slate-300">
-                Provide a topic or paste your lecture notes below, and our Gemini AI will instantly generate the assessment based on your selected difficulty mode.
-              </p>
+              <div className="mb-4 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+                <p className="text-sm text-slate-600 dark:text-slate-300">
+                  Provide a topic, paste your lecture notes, or upload a lecture transcript, and our Gemini AI will instantly generate the assessment.
+                </p>
+                <label className="flex shrink-0 cursor-pointer items-center gap-2 rounded-xl bg-indigo-100 px-4 py-2 text-sm font-bold text-indigo-700 transition hover:bg-indigo-200 dark:bg-indigo-900/50 dark:text-indigo-300 dark:hover:bg-indigo-800/50">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+                  Upload Transcript
+                  <input type="file" accept=".txt,.pdf,.docx" className="hidden" />
+                </label>
+              </div>
 
               <textarea
                 placeholder="E.g., Photosynthesis, Newton's Laws, or paste your lecture notes here..."
