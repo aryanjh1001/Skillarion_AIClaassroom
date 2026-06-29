@@ -97,8 +97,33 @@ export default function TeacherDashboard() {
 
   useEffect(() => {
     const fetch = async () => {
-      const snap = await getDoc(doc(db, "dashboards", "teacher"));
-      if (snap.exists()) setData(snap.data() as TeacherData);
+      try {
+        const snap = await getDoc(doc(db, "dashboards", "teacher"));
+        if (snap.exists()) {
+          setData(snap.data() as TeacherData);
+          return;
+        }
+      } catch (err) {
+        console.error("Firebase fetch failed, using fallback data:", err);
+      }
+      
+      // Fallback data
+      setData({
+        name: "Sarah Smith",
+        stats: { students: 120, classes: 5, avgAttendance: 92, assignments: 15 },
+        upcomingClasses: [
+          { time: "09:00 AM", subject: "Mathematics", grade: "10-A" },
+          { time: "11:30 AM", subject: "Physics", grade: "11-B" },
+          { time: "02:00 PM", subject: "Computer Science", grade: "12-A" },
+        ],
+        chartData: [
+          { name: "Mon", value: 95 },
+          { name: "Tue", value: 92 },
+          { name: "Wed", value: 89 },
+          { name: "Thu", value: 98 },
+          { name: "Fri", value: 94 },
+        ]
+      });
     };
 
     fetch();

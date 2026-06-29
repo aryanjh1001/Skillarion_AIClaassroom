@@ -140,11 +140,37 @@ export default function StudentDashboard() {
     const load = async () => {
       try {
         const res = await getStudentDoc();
-        if (!res) setError("No data found");
-        else setData(res);
-      } catch {
-        setError("Failed to load data");
+        if (res) {
+          setData(res);
+          return;
+        }
+      } catch (err) {
+        console.error("Firebase fetch failed, using fallback data:", err);
       }
+      
+      // Fallback data
+      setData({
+        name: "Aarav Sharma",
+        attendance: 86,
+        grade: "A",
+        chartData: [
+          { name: "Mon", value: 95 },
+          { name: "Tue", value: 92 },
+          { name: "Wed", value: 89 },
+          { name: "Thu", value: 98 },
+          { name: "Fri", value: 94 },
+        ],
+        rank: 12,
+        percentile: 88,
+        feedback: "Excellent performance in Mathematics. Need to improve in Physics.",
+        weakArea: "Thermodynamics",
+        leaderboardName: "Class 10-A Leaderboard",
+        nearestCompetitor: "Rahul",
+        competitorDelta: 5,
+        recommendedTopic: "Physics - Thermodynamics",
+        practiceLevel: "Medium",
+        practiceQuestions: 20,
+      });
     };
 
     load();

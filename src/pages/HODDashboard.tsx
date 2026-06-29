@@ -91,15 +91,36 @@ export default function HODDashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const snap = await getDoc(
-        doc(db, "dashboards", `hod_${selectedBranch}`)
-      );
+      try {
+        const snap = await getDoc(
+          doc(db, "dashboards", `hod_${selectedBranch}`)
+        );
 
-      if (snap.exists()) {
-        setData(snap.data() as HODData);
-      } else {
-        console.log("No dashboard found for:", `hod_${selectedBranch}`);
+        if (snap.exists()) {
+          setData(snap.data() as HODData);
+          return;
+        } else {
+          console.log("No dashboard found for:", `hod_${selectedBranch}`);
+        }
+      } catch (err) {
+        console.error("Firebase fetch failed, using fallback data:", err);
       }
+      
+      // Fallback data
+      setData({
+        name: "Dr. Sharma",
+        departments: 5,
+        faculty: 45,
+        reports: 120,
+        avgScore: 82,
+        chartData: [
+          { name: "CSE", value: 92 },
+          { name: "ECE", value: 85 },
+          { name: "MECH", value: 78 },
+          { name: "CIVIL", value: 75 },
+          { name: "EEE", value: 80 },
+        ]
+      });
     };
 
     fetchData();

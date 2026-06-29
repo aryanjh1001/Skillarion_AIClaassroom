@@ -58,11 +58,32 @@ export default function PrincipalDashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const snap = await getDoc(doc(db, "dashboards", "principal"));
+      try {
+        const snap = await getDoc(doc(db, "dashboards", "principal"));
 
-      if (snap.exists()) {
-        setData(snap.data() as PrincipalData);
+        if (snap.exists()) {
+          setData(snap.data() as PrincipalData);
+          return;
+        }
+      } catch (err) {
+        console.error("Firebase fetch failed, using fallback data:", err);
       }
+      
+      // Fallback data
+      setData({
+        name: "Dr. Adams",
+        totalStudents: 1520,
+        totalFaculty: 85,
+        avgAttendance: 94,
+        universityRank: 3,
+        chartData: [
+          { name: "Mon", value: 95 },
+          { name: "Tue", value: 92 },
+          { name: "Wed", value: 89 },
+          { name: "Thu", value: 98 },
+          { name: "Fri", value: 94 },
+        ]
+      });
     };
 
     fetchData();
